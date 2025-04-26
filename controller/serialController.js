@@ -15,6 +15,43 @@ db.execute(insertQuery,[email,name],(err)=>{
 }) 
 }
 
+const updateEntry=(req,res)=>{
+  const {id}=req.params;
+  const {name}=req.body;
+  const updateQuery="UPDATE serial set name=? where id=?";
+  db.execute(updateQuery,[name,id],(err,result)=>{
+    if(err){
+      console.log(err.message);
+      res.status(500).send(err.message);
+      return;
+    }
+    if(result.affectedRows === 0){
+      res.status(404).send("Serial is not found");
+      return;
+    }
+    res.status(200).send("User has been created");
+  })
+}
+
+const deleteEntry=(req,res)=>{
+  const {id}=req.params;
+  const deleteQuery="DELETE FROM serial where id=?";
+  db.execute(deleteQuery,[id],(err,result)=>{
+    if(err){
+      console.log(err.message);
+      res.status(500).send(err.message);
+      return;
+    }
+    if(result.affectedRows === 0){
+      res.status(404).send("Serial is not found");
+      return;
+    }
+    res.status(200).send(`User has been deleted id ${id}`);
+  })
+}
+
 module.exports={
-  addEntries
+  addEntries,
+  updateEntry,
+  deleteEntry
 };
